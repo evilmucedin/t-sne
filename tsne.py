@@ -161,6 +161,30 @@ def tsne(X = Math.array([]), no_dims = 2, initial_dims = 50, perplexity = 30.0):
                     
     # Return solution
     return Y
+
+def word2vec():
+    labels = []
+    nLines = 0
+    with open("word2vec.txt") as f:
+        for line in f:
+            parts = line.split()
+            labels.append(parts[0])
+            nLines += 1
+    data = Math.zeros( shape=(nLines, 128) )
+    iLine = 0
+    with open("word2vec.txt") as f:
+        for line in f:
+            parts = line.split()
+            for i in range(128):
+                data[iLine, i] = float(parts[i + 1])
+            iLine += 1
+
+    Y = tsne(data, 2, 50, 20.0)
+    plt.scatter(Y[:,0], Y[:,1])
+    for i in range(len(labels)):
+        plt.annotate(labels[i], xy=(Y[i, 0], Y[i, 1]))
+    plt.show()
+    
                 
 def mnist():
     print("Run Y = tsne.tsne(X, no_dims, perplexity) to perform t-SNE on your dataset.")
@@ -174,4 +198,5 @@ def mnist():
     plt.show()
 
 if __name__ == "__main__":
+    word2vec()
     mnist()
