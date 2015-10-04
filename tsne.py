@@ -6,15 +6,14 @@
 # Implementation of t-SNE in Python. The implementation was tested on Python 2.5.1, and it requires a working 
 # installation of NumPy. The implementation comes with an example on the MNIST dataset. In order to plot the
 # results of this example, a working installation of matplotlib is required.
-# The example can be run by executing: ipython tsne.py -pylab
 #
 #
 #  Created by Laurens van der Maaten on 20-12-08.
 #  Copyright (c) 2008 Tilburg University. All rights reserved.
 
 import numpy as Math
-import pylab as Plot
-        
+import matplotlib.pyplot as plt
+
 def Hbeta(D = Math.array([]), beta = 1.0):
     """Compute the perplexity and the P-row for a specific value of the precision of a Gaussian distribution."""
     
@@ -127,38 +126,38 @@ def tsne(X = Math.array([]), no_dims = 2, initial_dims = 50, perplexity = 30.0):
     P = Math.maximum(P, 1e-12)
     
     # Run iterations
-    for iter in range(max_iter)
-            # Compute pairwise affinities
-            sum_Y = Math.sum(Math.square(Y), 1)
-            num = 1 / (1 + Math.add(Math.add(-2 * Math.dot(Y, Y.T), sum_Y).T, sum_Y))
-            num[range(n), range(n)] = 0
-            Q = num / Math.sum(num)
-            Q = Math.maximum(Q, 1e-12)
-            
-            # Compute gradient
-            PQ = P - Q
-            for i in range(n):
-                    dY[i,:] = Math.sum(Math.tile(PQ[:,i] * num[:,i], (no_dims, 1)).T * (Y[i,:] - Y), 0)
-                    
-            # Perform the update
-            if iter < 20:
-                    momentum = initial_momentum
-            else:
-                    momentum = final_momentum
-            gains = (gains + 0.2) * ((dY > 0) != (iY > 0)) + (gains * 0.8) * ((dY > 0) == (iY > 0))
-            gains[gains < min_gain] = min_gain
-            iY = momentum * iY - eta * (gains * dY)
-            Y = Y + iY
-            Y = Y - Math.tile(Math.mean(Y, 0), (n, 1))
-            
-            # Compute current value of cost function
-            if (iter + 1) % 10 == 0:
-                    C = Math.sum(P * Math.log(P / Q));
-                    print("Iteration ", (iter + 1), ": error is ", C)
-                    
-            # Stop lying about P-values
-            if iter == 100:
-                    P = P / 4
+    for iter in range(max_iter):
+        # Compute pairwise affinities
+        sum_Y = Math.sum(Math.square(Y), 1)
+        num = 1 / (1 + Math.add(Math.add(-2 * Math.dot(Y, Y.T), sum_Y).T, sum_Y))
+        num[range(n), range(n)] = 0
+        Q = num / Math.sum(num)
+        Q = Math.maximum(Q, 1e-12)
+        
+        # Compute gradient
+        PQ = P - Q
+        for i in range(n):
+                dY[i,:] = Math.sum(Math.tile(PQ[:,i] * num[:,i], (no_dims, 1)).T * (Y[i,:] - Y), 0)
+                
+        # Perform the update
+        if iter < 20:
+                momentum = initial_momentum
+        else:
+                momentum = final_momentum
+        gains = (gains + 0.2) * ((dY > 0) != (iY > 0)) + (gains * 0.8) * ((dY > 0) == (iY > 0))
+        gains[gains < min_gain] = min_gain
+        iY = momentum * iY - eta * (gains * dY)
+        Y = Y + iY
+        Y = Y - Math.tile(Math.mean(Y, 0), (n, 1))
+        
+        # Compute current value of cost function
+        if (iter + 1) % 10 == 0:
+                C = Math.sum(P * Math.log(P / Q));
+                print("Iteration ", (iter + 1), ": error is ", C)
+                
+        # Stop lying about P-values
+        if iter == 100:
+                P = P / 4
                     
     # Return solution
     return Y
@@ -169,7 +168,10 @@ def mnist():
     X = Math.loadtxt("mnist2500_X.txt")
     labels = Math.loadtxt("mnist2500_labels.txt")
     Y = tsne(X, 2, 50, 20.0)
-    Plot.scatter(Y[:,0], Y[:,1], 20, labels)
+    plt.scatter(Y[:,0], Y[:,1])
+    for i in range(len(labels)):
+        plt.annotate(labels[i], xy=(Y[i, 0], Y[i, 1]))
+    plt.show()
 
 if __name__ == "__main__":
     mnist()
