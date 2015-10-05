@@ -137,13 +137,13 @@ def tsne(X = Math.array([]), no_dims = 2, initial_dims = 50, perplexity = 30.0):
         # Compute gradient
         PQ = P - Q
         for i in range(n):
-                dY[i,:] = Math.sum(Math.tile(PQ[:,i] * num[:,i], (no_dims, 1)).T * (Y[i,:] - Y), 0)
+            dY[i,:] = Math.sum(Math.tile(PQ[:,i] * num[:,i], (no_dims, 1)).T * (Y[i,:] - Y), 0)
                 
         # Perform the update
         if iter < 20:
-                momentum = initial_momentum
+            momentum = initial_momentum
         else:
-                momentum = final_momentum
+            momentum = final_momentum
         gains = (gains + 0.2) * ((dY > 0) != (iY > 0)) + (gains * 0.8) * ((dY > 0) == (iY > 0))
         gains[gains < min_gain] = min_gain
         iY = momentum * iY - eta * (gains * dY)
@@ -151,13 +151,13 @@ def tsne(X = Math.array([]), no_dims = 2, initial_dims = 50, perplexity = 30.0):
         Y = Y - Math.tile(Math.mean(Y, 0), (n, 1))
         
         # Compute current value of cost function
-        if (iter + 1) % 10 == 0:
-                C = Math.sum(P * Math.log(P / Q));
-                print("Iteration ", (iter + 1), ": error is ", C)
+        if iter % 10 == 9:
+            C = Math.sum(P * Math.log(P / Q));
+            print("Iteration ", (iter + 1), ": error is ", C)
                 
         # Stop lying about P-values
         if iter == 100:
-                P = P / 4
+            P = P / 4
                     
     # Return solution
     return Y
@@ -206,6 +206,7 @@ def mnist():
     for i in range(len(labels)):
         plt.annotate(labels[i], xy=(Y[i, 0], Y[i, 1]))
     plt.show()
+
 
 if __name__ == "__main__":
     word2vec()
