@@ -181,6 +181,10 @@ def word2vec():
             iLine += 1
 
     Y = tsne(data, 3, 70, 20.0)
+    with open("3d.tsne", "w") as fOut:
+        for y in Y:
+            print(y[0], y[1], y[2], file=fOut)
+
     fig = plt.figure()
     ax = fig.gca(projection='3d')
     ax.scatter(Y[:, 0], Y[:, 1], Y[:, 2])
@@ -190,6 +194,9 @@ def word2vec():
 
     plt.clf()
     Y = tsne(data, 2, 50, 20.0)
+    with open("2d.tsne", "w") as fOut:
+        for y in Y:
+            print(y[0], y[1], file=fOut)
     plt.scatter(Y[:, 0], Y[:, 1])
     for i in range(len(labels)):
         plt.annotate(labels[i], xy=(Y[i, 0], Y[i, 1]))
