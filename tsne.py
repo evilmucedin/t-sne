@@ -13,6 +13,7 @@
 
 import numpy as Math
 import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
 
 def Hbeta(D = Math.array([]), beta = 1.0):
     """Compute the perplexity and the P-row for a specific value of the precision of a Gaussian distribution."""
@@ -163,7 +164,7 @@ def tsne(X = Math.array([]), no_dims = 2, initial_dims = 50, perplexity = 30.0):
     return Y
 
 def word2vec():
-    filename = "word2vec.3000.txt"
+    filename = "word2vec.3000.txt.head"
     labels = []
     nLines = 0
     with open(filename) as f:
@@ -182,7 +183,7 @@ def word2vec():
 
     Y = tsne(data, 3, 70, 20.0)
     fig = plt.figure()
-    ax = fig.add_subplot(111, projection='3d')
+    ax = fig.gca(projection='3d')
     ax.scatter(Y[:, 0], Y[:, 1], Y[:, 2])
     for i in range(len(labels)):
         ax.text(Y[i, 0], Y[i, 1], Y[i, 2], labels[i])
