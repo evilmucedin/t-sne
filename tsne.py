@@ -163,24 +163,34 @@ def tsne(X = Math.array([]), no_dims = 2, initial_dims = 50, perplexity = 30.0):
     return Y
 
 def word2vec():
+    filename = "word2vec.3000.txt"
     labels = []
     nLines = 0
-    with open("word2vec.txt") as f:
+    with open(filename) as f:
         for line in f:
             parts = line.split()
             labels.append(parts[0])
             nLines += 1
     data = Math.zeros( shape=(nLines, 128) )
     iLine = 0
-    with open("word2vec.txt") as f:
+    with open(filename) as f:
         for line in f:
             parts = line.split()
             for i in range(128):
                 data[iLine, i] = float(parts[i + 1])
             iLine += 1
 
+    Y = tsne(data, 3, 70, 20.0)
+    fig = plt.figure()
+    ax = fig.add_subplot(111, projection='3d')
+    ax.scatter(Y[:, 0], Y[:, 1], Y[:, 2])
+    for i in range(len(labels)):
+        ax.text(Y[i, 0], Y[i, 1], Y[i, 2], labels[i])
+    plt.show()
+
+    plt.clf()
     Y = tsne(data, 2, 50, 20.0)
-    plt.scatter(Y[:,0], Y[:,1])
+    plt.scatter(Y[:, 0], Y[:, 1])
     for i in range(len(labels)):
         plt.annotate(labels[i], xy=(Y[i, 0], Y[i, 1]))
     plt.show()
