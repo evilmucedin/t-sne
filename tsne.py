@@ -166,21 +166,30 @@ def tsne(X = Math.array([]), no_dims = 2, initial_dims = 50, perplexity = 30.0):
 def word2vec(filename):
     labels = []
     nLines = 0
+    dim = -1
     with open(filename) as f:
         for line in f:
             parts = line.split()
+            if -1 == dim:
+                dim = len(parts) - 1
+            else:
+                if dim + 1 != len(parts):
+                    raise Exception("%s %d %d", line, dim + 1, len(parts))
             labels.append(parts[0])
             nLines += 1
-    data = Math.zeros( shape=(nLines, 128) )
+    data = Math.zeros( shape=(nLines, dim) )
     iLine = 0
     with open(filename) as f:
         for line in f:
             parts = line.split()
-            for i in range(len(parts) - 1):
+            for i in range(dim):
                 data[iLine, i] = float(parts[i + 1])
             iLine += 1
 
-    Y = tsne(data, 3, 70, 20.0)
+    initialDim = 70 if (dim >= 140) else dim/2
+    print("Initial dim: %d" % initialDim)
+
+    Y = tsne(data, 3, initialDim, 20.0)
     with open("%s.3d.tsne" % filename, "w") as fOut:
         for y, label in zip(Y, labels):
             print(label, y[0], y[1], y[2], file=fOut)
@@ -193,8 +202,8 @@ def word2vec(filename):
     plt.show()
 
     plt.clf()
-    Y = tsne(data, 2, 50, 20.0)
-    with open("%s2d.tsne" % filename, "w") as fOut:
+    Y = tsne(data, 2, initialDim, 20.0)
+    with open("%s.2d.tsne" % filename, "w") as fOut:
         for y, label in zip(Y, labels):
             print(y[0], y[1], file=fOut)
     plt.scatter(Y[:, 0], Y[:, 1])
