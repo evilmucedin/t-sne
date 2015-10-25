@@ -176,7 +176,7 @@ def word2vec(filename):
     with open(filename) as f:
         for line in f:
             parts = line.split()
-            for i in range(128):
+            for i in range(len(parts) - 1):
                 data[iLine, i] = float(parts[i + 1])
             iLine += 1
 
