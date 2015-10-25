@@ -186,9 +186,19 @@ def word2vec(filename):
                 data[iLine, i] = float(parts[i + 1])
             iLine += 1
 
-    initialDim = 70 if (dim >= 140) else dim/2
+    initialDim = 70 if (dim >= 70) else dim
     print("Initial dim: %d" % initialDim)
 
+    Y = tsne(data, 2, initialDim, 20.0)
+    with open("%s.2d.tsne" % filename, "w") as fOut:
+        for y, label in zip(Y, labels):
+            print(y[0], y[1], file=fOut)
+    plt.scatter(Y[:, 0], Y[:, 1])
+    for i in range(len(labels)):
+        plt.annotate(labels[i], xy=(Y[i, 0], Y[i, 1]))
+    plt.show()
+
+    plt.clf()
     Y = tsne(data, 3, initialDim, 20.0)
     with open("%s.3d.tsne" % filename, "w") as fOut:
         for y, label in zip(Y, labels):
@@ -199,16 +209,6 @@ def word2vec(filename):
     ax.scatter(Y[:, 0], Y[:, 1], Y[:, 2])
     for i in range(len(labels)):
         ax.text(Y[i, 0], Y[i, 1], Y[i, 2], labels[i])
-    plt.show()
-
-    plt.clf()
-    Y = tsne(data, 2, initialDim, 20.0)
-    with open("%s.2d.tsne" % filename, "w") as fOut:
-        for y, label in zip(Y, labels):
-            print(y[0], y[1], file=fOut)
-    plt.scatter(Y[:, 0], Y[:, 1])
-    for i in range(len(labels)):
-        plt.annotate(labels[i], xy=(Y[i, 0], Y[i, 1]))
     plt.show()
     
                 
