@@ -14,6 +14,7 @@
 import numpy as Math
 import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
+import argparse
 
 def Hbeta(D = Math.array([]), beta = 1.0):
     """Compute the perplexity and the P-row for a specific value of the precision of a Gaussian distribution."""
@@ -162,8 +163,7 @@ def tsne(X = Math.array([]), no_dims = 2, initial_dims = 50, perplexity = 30.0):
     # Return solution
     return Y
 
-def word2vec():
-    filename = "word2vec.3000.txt"
+def word2vec(filename):
     labels = []
     nLines = 0
     with open(filename) as f:
@@ -181,7 +181,7 @@ def word2vec():
             iLine += 1
 
     Y = tsne(data, 3, 70, 20.0)
-    with open("3d.tsne", "w") as fOut:
+    with open("%s.3d.tsne" % filename, "w") as fOut:
         for y, label in zip(Y, labels):
             print(label, y[0], y[1], y[2], file=fOut)
 
@@ -194,7 +194,7 @@ def word2vec():
 
     plt.clf()
     Y = tsne(data, 2, 50, 20.0)
-    with open("2d.tsne", "w") as fOut:
+    with open("%s2d.tsne" % filename, "w") as fOut:
         for y, label in zip(Y, labels):
             print(y[0], y[1], file=fOut)
     plt.scatter(Y[:, 0], Y[:, 1])
@@ -216,5 +216,10 @@ def mnist():
 
 
 if __name__ == "__main__":
-    word2vec()
-    mnist()
+    parser = argparse.ArgumentParser(description="visualization of multidimentional data")
+    parser.add_argument('-i', "--input", help="input")
+
+    args = parser.parse_args()
+    
+    word2vec(args.input)
+    # imnist()
