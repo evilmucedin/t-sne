@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+import gzip
+
 N = 1000
 
 fIn = open("2015-10-01-False-TopHosts2")
@@ -16,7 +18,7 @@ for i in range(N):
     if i < 10:
         print(hosts[i][0])
 
-fData = open("hosts.txt")
+fData = gzip.open("hosts.txt", "rt")
 fOut = open("hosts.%d.txt" % N, "w")
 for line in fData:
     if line.split()[0] in sHosts:
